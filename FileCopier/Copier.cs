@@ -15,6 +15,8 @@ namespace FileCopier
 
         private static ILog LOG = LogManager.GetLogger(typeof(Copier));
 
+        private static object _lockObject = new object();
+
         public DirectoryMapping Mapping { get; }
 
         public Copier(DirectoryMapping mapping) => Mapping = mapping;
@@ -75,7 +77,7 @@ namespace FileCopier
                             LOG.Info($"Not backing up file because it is part of an exclusion: {file.FullName}");
                             continue;
                             }
-                        file.CopyTo(destFile.FullName, overwrite: true);
+                        CopyFileTo(file, destFile);
                         LOG.Debug($"Backed up file: {file.FullName}");
                         _copyCount++;
                         }
@@ -85,7 +87,7 @@ namespace FileCopier
                         }
                     }
                 }
-            catch(Exception ex)
+            catch (Exception ex)
                 {
                 LOG.Error(ex);
                 }
@@ -94,15 +96,22 @@ namespace FileCopier
                 {
                 di.EnumerateDirectories().ToList().ForEach(x => CopyDirectoryRecurive(x));
                 }
-            catch(Exception ex)
+            catch (Exception ex)
                 {
                 LOG.Error(ex);
                 }
             }
 
+        public static void CopyFileTo(FileInfo file, FileInfo destFile)
+            {
+            lock (_lockObject)
+                {
+                file.CopyTo(destFile.FullName, overwrite: true);
+                }
+            }
+
         public static void CancelCopy()
             {
-
             }
         }
     }
