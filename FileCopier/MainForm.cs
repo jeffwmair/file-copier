@@ -46,7 +46,7 @@ namespace FileCopier
                 }
             }
 
-        private void btnBackupAll_Click(object sender, EventArgs e)
+        private void btnCopyAll_Click(object sender, EventArgs e)
             {
             _copySetControls.ForEach(x => x.BeginCopy());
             }

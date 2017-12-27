@@ -34,7 +34,7 @@ namespace FileCopier
             lblStatus.Text = "Ready";
             lnkSource.Text = $"From computer: {mapping.Src}";
             lnkSource.Click += LnkSource_Click;
-            lnkDest.Text = $"To backup: {mapping.Dest}";
+            lnkDest.Text = $"To destination: {mapping.Dest}";
             lnkDest.Click += LnkDest_Click;
             lblName.Text = mapping.Name;
             _copyWorker.DoWork += Worker_DoWork;
@@ -118,7 +118,7 @@ namespace FileCopier
             SetCancelProgressWorker(true);
             Invoke(new Action(() =>
                 {
-                    lblStatus.Text = $"Backup completed at {DateTime.Now}";
+                    lblStatus.Text = $"Copy completed at {DateTime.Now}";
                 }));
             }
 

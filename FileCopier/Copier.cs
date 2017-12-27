@@ -25,7 +25,7 @@ namespace FileCopier
 
         public void StartCopy()
             {
-            LOG.Info($"Beginning backup for mapping:{Mapping}");
+            LOG.Info($"Beginning copy for mapping:{Mapping}");
             var sw = new Stopwatch();
             sw.Start();
             var di = new DirectoryInfo(Mapping.Src);

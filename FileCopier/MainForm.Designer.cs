@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
             {
-            this.btnBackupAll = new System.Windows.Forms.Button();
+            this.btnCopyAll = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // btnBackupAll
+            // btnCopyAll
             // 
-            this.btnBackupAll.Location = new System.Drawing.Point(56, 31);
-            this.btnBackupAll.Name = "btnBackupAll";
-            this.btnBackupAll.Size = new System.Drawing.Size(338, 67);
-            this.btnBackupAll.TabIndex = 0;
-            this.btnBackupAll.Text = "Backup Everything";
-            this.btnBackupAll.UseVisualStyleBackColor = true;
-            this.btnBackupAll.Click += new System.EventHandler(this.btnBackupAll_Click);
+            this.btnCopyAll.Location = new System.Drawing.Point(56, 31);
+            this.btnCopyAll.Name = "btnCopyAll";
+            this.btnCopyAll.Size = new System.Drawing.Size(338, 67);
+            this.btnCopyAll.TabIndex = 0;
+            this.btnCopyAll.Text = "Copy Everything";
+            this.btnCopyAll.UseVisualStyleBackColor = true;
+            this.btnCopyAll.Click += new System.EventHandler(this.btnCopyAll_Click);
             // 
             // MainForm
             // 
@@ -48,7 +48,7 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.ClientSize = new System.Drawing.Size(1450, 989);
-            this.Controls.Add(this.btnBackupAll);
+            this.Controls.Add(this.btnCopyAll);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -61,7 +61,7 @@
             }
 
         #endregion
-        private System.Windows.Forms.Button btnBackupAll;
+        private System.Windows.Forms.Button btnCopyAll;
         }
     }
 
