@@ -1,18 +1,8 @@
 ﻿[
   {
     "Name": "test 1",
-    "Src": "c:\\files\\backup-test\\source",
-    "Dest": "c:\\files\\backup-test\\dest",
-    "Exclusions": [
-      "source\\b",
-      "a\\a-2",
-      "bar.txt"
-    ]
-  },
-  {
-    "Name": "test 2",
-    "Src": "c:\\files\\backup-test\\source",
-    "Dest": "c:\\files\\backup-test\\dest",
+    "Src": "c:\\files\\dev\\file-copier\\FileCopier\\backup-test\\source",
+    "Dest": "c:\\files\\dev\\file-copier\\FileCopier\\backup-test\\dest",
     "Exclusions": [
       "source\\b",
       "a\\a-2",

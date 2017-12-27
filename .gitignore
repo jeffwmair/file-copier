@@ -3,3 +3,4 @@ packages/
 bin/
 obj/
 *.sln
+**/backup-test/dest/
