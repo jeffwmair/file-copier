@@ -36,8 +36,7 @@ namespace FileCopier
             lnkSource.Click += LnkSource_Click;
             lnkDest.Text = $"To backup: {mapping.Dest}";
             lnkDest.Click += LnkDest_Click;
-            btnCopy.Text = $"Backup {mapping.Name}";
-            btnCopy.Click += BtnCopy_Click;
+            lblName.Text = mapping.Name;
             _copyWorker.DoWork += Worker_DoWork;
             _copyWorker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             _copyProgressWorker.DoWork += ProgressWorker_DoWork;
@@ -76,7 +75,6 @@ namespace FileCopier
 
         private void BtnCopy_Click(object sender, EventArgs e)
             {
-            btnCopy.Enabled = false;
             _copyWorker.RunWorkerAsync();
             }
 
@@ -120,8 +118,7 @@ namespace FileCopier
             SetCancelProgressWorker(true);
             Invoke(new Action(() =>
                 {
-                    btnCopy.Enabled = true;
-                    lblStatus.Text = "Ready";
+                    lblStatus.Text = $"Backup completed at {DateTime.Now}";
                 }));
             }
 

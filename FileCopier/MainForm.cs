@@ -36,7 +36,7 @@ namespace FileCopier
 
                 // todo: check for duplicates
 
-                _copySetControls = mappings.Select((x, index) => new FileCopySet(left: 20, top: 80 + (index * 100), mapping: x)).ToList();
+                _copySetControls = mappings.Select((x, index) => new FileCopySet(left: 20, top: 80 + (index * 130), mapping: x)).ToList();
                 Controls.AddRange(_copySetControls.ToArray());
                 }
             catch (Exception ex)
