@@ -6,112 +6,60 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FileCopier.Filesystem;
 using log4net;
 
 namespace FileCopier
     {
-    class Copier
+    public class Copier
         {
-
         private static ILog LOG = LogManager.GetLogger(typeof(Copier));
+        private DirectoryMapping _mapping;
+        private IFileSystem _fileSystem;
 
-        private static object _lockObject = new object();
-
-        public DirectoryMapping Mapping { get; }
-
-        public Copier(DirectoryMapping mapping) => Mapping = mapping;
-
-        private int _copyCount = 0;
+        public Copier(DirectoryMapping mapping, IFileSystem fileSys)
+            {
+            _mapping = mapping;
+            _fileSystem = fileSys;
+            }
 
         public void StartCopy()
             {
-            LOG.Info($"Beginning copy for mapping:{Mapping}");
+            LOG.Info($"Beginning copy for mapping:{_mapping}");
             var sw = new Stopwatch();
             sw.Start();
-            var di = new DirectoryInfo(Mapping.Src);
-            if (!di.Exists)
+            IDirectory di = new DirectoryInfoWrapper(_mapping.Src);
+            if (!di.Exists())
                 {
-                throw new FileNotFoundException($"Directory '{di.FullName}' does not exist");
+                throw new FileNotFoundException($"Directory '{di.GetFullName()}' does not exist");
                 }
             CopyDirectoryRecurive(di);
-            LOG.Info($"Total files backed up:{_copyCount} in {sw.ElapsedMilliseconds / 1000.0}s");
-            _copyCount = 0;
+            LOG.Info($"Total files copied {_fileSystem.GetCopyCount()} in {sw.ElapsedMilliseconds / 1000.0}s");
             }
 
-        private void CopyDirectoryRecurive(DirectoryInfo di)
+        private void CopyDirectoryRecurive(IDirectory di)
             {
-            if (Mapping.Exclusions.Any(x => di.FullName.EndsWith(x)))
+            if (_mapping.DirectoryShouldBeExcludedFromCopy(di.GetFullName()))
                 {
-                LOG.Info($"Directory {di.FullName} is excluded, so ignoring");
+                LOG.Info($"Directory {di.GetFullName()} is excluded, so ignoring");
                 return;
                 }
 
-            var dest = Mapping.FindDestinationDirectoryFromSource(di.FullName);
-            if (!Directory.Exists(dest))
-                {
-                try
-                    {
-                    Directory.CreateDirectory(dest);
-                    }
-                catch (DirectoryNotFoundException ex)
-                    {
-                    throw new DirectoryNotFoundException($"Unable to find part of the destination directory.  Check that the USB memory stick is plugged in.  Error:{ex.Message}");
-                    }
-                }
-            try
-                {
-                foreach (var file in di.EnumerateFiles())
-                    {
-                    // if the file already exists and is newer, don't copy
-                    FileInfo destFile = new FileInfo($"{dest}\\{file.Name}");
-                    if (destFile.Exists && destFile.LastWriteTimeUtc >= file.LastWriteTimeUtc)
-                        {
-                        // don't overwrite newer files
-                        LOG.Debug($"Not updating file because already backed up: {file.FullName}");
-                        continue;
-                        }
-                    try
-                        {
-                        if (Mapping.Exclusions.Any(x => file.FullName.EndsWith(x)))
-                            {
-                            LOG.Info($"Not backing up file because it is part of an exclusion: {file.FullName}");
-                            continue;
-                            }
-                        CopyFileTo(file, destFile);
-                        LOG.Debug($"Backed up file: {file.FullName}");
-                        _copyCount++;
-                        }
-                    catch (Exception ex)
-                        {
-                        LOG.Error($"Error trying to copy the file '{file.FullName}'", ex);
-                        }
-                    }
-                }
-            catch (Exception ex)
-                {
-                LOG.Error(ex);
-                }
+            var dest = _mapping.FindDestinationDirectoryFromSource(di.GetFullName());
+            var destDirectory = new DirectoryInfoWrapper(dest);
+            di.GetFiles()
+                .ToList()
+                .FilterOutFilesThatAreToBeExcluded(_fileSystem, _mapping)
+                .FilterOutFilesWithUpToDateCopies(destDirectory, _fileSystem)
+                .CopyFilesToDestinations(destDirectory, _fileSystem);
 
-            try
-                {
-                di.EnumerateDirectories().ToList().ForEach(x => CopyDirectoryRecurive(x));
-                }
-            catch (Exception ex)
-                {
-                LOG.Error(ex);
-                }
+            di.GetDirectories().ToList().ForEach(x => CopyDirectoryRecurive(x));
             }
 
-        public static void CopyFileTo(FileInfo file, FileInfo destFile)
+        public void CancelCopy()
             {
-            lock (_lockObject)
-                {
-                file.CopyTo(destFile.FullName, overwrite: true);
-                }
+            _fileSystem.SetEnabledStatus(enabled: false);
             }
 
-        public static void CancelCopy()
-            {
-            }
         }
     }

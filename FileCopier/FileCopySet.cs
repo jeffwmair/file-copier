@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using System.Diagnostics;
 using log4net;
+using FileCopier.Filesystem;
 
 namespace FileCopier
     {
@@ -25,7 +26,7 @@ namespace FileCopier
         private bool _cancelProgressWorker = false;
         private Copier _copier;
 
-        public FileCopySet(int left, int top, DirectoryMapping mapping)
+        public FileCopySet(int left, int top, DirectoryMapping mapping, IFileSystem fileSystem)
             {
             InitializeComponent();
             Top = top;
@@ -40,7 +41,7 @@ namespace FileCopier
             _copyWorker.DoWork += Worker_DoWork;
             _copyWorker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             _copyProgressWorker.DoWork += ProgressWorker_DoWork;
-            _copier = new Copier(mapping);
+            _copier = new Copier(mapping, fileSystem);
             }
 
         public void BeginCopy()
@@ -59,7 +60,7 @@ namespace FileCopier
                     }
                 catch(DirectoryNotFoundException ex)
                     {
-                    var msg = $"Couldn't go to the destination directory.  Make sure the USB stick is plugged in.  Error message:{ex.Message}";
+                    var msg = $"Couldn't go to the destination directory.  Make sure the destination is valid.  Error message:{ex.Message}";
                     LOG.Error(msg, ex);
                     MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;

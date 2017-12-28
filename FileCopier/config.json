@@ -1,6 +1,6 @@
 ﻿[
   {
-    "Name": "test 1",
+    "Name": "My Files to Backup",
     "Src": "c:\\files\\dev\\file-copier\\FileCopier\\backup-test\\source",
     "Dest": "c:\\files\\dev\\file-copier\\FileCopier\\backup-test\\dest",
     "Exclusions": [

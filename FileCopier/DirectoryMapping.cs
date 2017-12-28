@@ -27,6 +27,10 @@ namespace FileCopier
             {
             return $"{Dest}{sourceDirectory.Replace(Src, "")}";
             }
+        public bool DirectoryShouldBeExcludedFromCopy(string directoryName)
+            {
+            return Exclusions.Any(x => directoryName.EndsWith(x));
+            }
         public override bool Equals(object obj)
             {
             var other = obj as DirectoryMapping;

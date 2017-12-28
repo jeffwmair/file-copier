@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Copier.cs" />
+    <Compile Include="CopierUtils.cs" />
     <Compile Include="DirectoryMapping.cs" />
     <Compile Include="FileCopySet.cs">
       <SubType>UserControl</SubType>
@@ -57,6 +58,12 @@
     <Compile Include="FileCopySet.Designer.cs">
       <DependentUpon>FileCopySet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Filesystem\DirectoryInfoWrapper.cs" />
+    <Compile Include="Filesystem\FileInfoWrapper.cs" />
+    <Compile Include="Filesystem\FileSystem.cs" />
+    <Compile Include="Filesystem\IDirectory.cs" />
+    <Compile Include="Filesystem\IFile.cs" />
+    <Compile Include="Filesystem\IFileSystem.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,6 +93,7 @@
     </None>
     <None Include="log4.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
